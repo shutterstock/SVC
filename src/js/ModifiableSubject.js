@@ -21,7 +21,7 @@ svc.ModifiableSubject = Class.create(svc.Subject, {
 
 	// Get all the `properties` for a ModifiableSubject.
 	properties: function () {
-		var properties = $A();
+		var properties = []; 
 		for (var property in this) {
 			if (property.charAt(0) === ':') {
 				properties.push(property.slice(1));
