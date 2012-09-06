@@ -14,8 +14,8 @@ svc.View = Class.create({
 		this._subject = args.subject;
 		this._element = this.draw();
 
-		this._subscribedFunctions = $H();
-		this.subscribe('subject:destroy', this.tearDown.bind(this));
+		this._subscribedFunctions = {};
+		this.subscribe('subject:destroy', _.bind(this.tearDown, this));
 	},
 	
 	// This will be where you define the main element of a view, you can also define other elements
@@ -67,6 +67,6 @@ svc.View = Class.create({
 	
 	// Clear out all subscribed functions for the view.
 	unsubscribeAll: function () {
-		this._subscribedFunctions.keys().each(this.unsubscribe.bind(this));
+		_.chain(_.keys(this._subscribedFunctions)).each(_.bind(this.unsubscribe, this));
 	}
 });
