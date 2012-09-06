@@ -7,7 +7,8 @@ module.exports = testCase({
 		jsdom.env({
 			html: 'test_svc.html',
 			scripts: [
-				'https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js',
+				'https://github.com/Jakobo/PTClass/blob/master/class-min.js',
+				//'https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js',
 				'http://github.com/jquery/qunit/raw/master/qunit/qunit.js'
 			],
 			done: function (errors, window) {

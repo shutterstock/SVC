@@ -8,3 +8,5 @@
 
 	var svc = namespace.svc = {};
 	svc.VERSION = version;
+
+	var fromArguments = Array.prototype.slice;

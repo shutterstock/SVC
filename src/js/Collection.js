@@ -1,4 +1,4 @@
-// Collection 
+// Collection
 // --------------
 
 // `Collection`s are made up of `Subject`s, but are subjects as well. `Collection`s are useful for storing
@@ -8,13 +8,13 @@ svc.Collection = Class.create(svc.Subject, {
 		// be an array of subjects. It also can take a `sortFunction` that can be used to sort the collection
 	initialize: function ($super, args) {
 		$super(args);
-		this._collection = $A(args.collection || []);
+		this._collection = args.collection || [];
 		this._sortFunction = args.sortFunction;
 		if (this._sortFunction) {
-			this._collection.sort(this._sortFunction);
+			_.sortBy(this._collection, this._sortFunction);
 		}
 	},
-	
+
 	// Get a value in the `Collection` from a particular `index`. Will throw errors for bad indices.
 	at: function (index) {
 		if (! this.inRange(index)) {
@@ -26,7 +26,7 @@ svc.Collection = Class.create(svc.Subject, {
 	// Get a particular `subject` from the `collection`. Uses the `subject`s isEqual property to get the object,
 	// returns `null` if nothing is found.
 	get: function (subject) {
-		return this._collection.find(
+		return _.find(this._collection,
 			function (entry) {
 				return entry.isEqual(subject);
 			}
@@ -42,19 +42,19 @@ svc.Collection = Class.create(svc.Subject, {
 	// and will return -1 if not found.
 	indexOf: function (subject) {
 		var index = -1;
-		this._collection.find(
+		_.find(this._collection,
 			function (entry) {
 				++index;
 				return entry.isEqual(subject);
 			}
 		);
 
-		return index === this.size() ? -1 : index;
+		return index === this.length ? -1 : index;
 	},
 
 	// Determines whether or not an index fits into the `collection`.
 	inRange: function (index) {
-		return index >= 0 && index < this.size();
+		return index >= 0 && index < this.length;
 	},
 
 	// Returns the size of the collection.
@@ -67,7 +67,7 @@ svc.Collection = Class.create(svc.Subject, {
 		if (this.get(subject)) { return; }
 		this._collection.push(subject);
 		if (this._sortFunction) {
-			this._collection.sort(this._sortFunction);
+			_.sortBy(this._collection, this._sortFunction);
 		}
 		this.notify('collection:add', subject);
 		subject.notify('collection:add');
@@ -76,8 +76,8 @@ svc.Collection = Class.create(svc.Subject, {
 	// Remove all `subject`s from the `collection`.
 	clear: function () {
 		var cleared = this.getAll();
-		this._collection = $A();
-		cleared.invoke('notify', 'collection:clear');
+		this._collection = [];
+		_.invoke(cleared, 'notify', 'collection:clear');
 		this.notify('collection:clear');
 	},
 
@@ -85,16 +85,9 @@ svc.Collection = Class.create(svc.Subject, {
 	remove: function (subject) {
 		var entry = this.get(subject);
 		if (! entry) { return; }
-		this._collection = this._collection.without(entry);
+		this._collection = _.without(this._collection, entry);
 		entry.notify('collection:remove');
 		this.notify('collection:remove', entry);
 		return entry;
-	},
-
-	_each: function (iterator) {
-		this._collection._each(iterator);
 	}
 });
-
-// Mixin `Enumerable` functionality.
-svc.Collection.addMethods(Enumerable);
