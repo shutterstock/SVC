@@ -447,4 +447,4 @@ svc.AjaxSingleRequestController = Class.create(svc.AjaxController, {
 	// When the request finishes, unlock the progress lock
 	onComplete: function () { this._inProgress = false; }
 });
-})(null || (function(){ return this; })(), "1.1");
+})(null || (function(){ return this; })(), "1.2");
