@@ -15,8 +15,8 @@ BASE_JS_FILES=\
 		src/js/View.js\
 		src/js/ActionView.js\
 		src/js/Controller.js\
-		src/js/AjaxController.js\
-		src/js/AjaxSingleRequestController.js\
+#		src/js/AjaxController.js\
+#		src/js/AjaxSingleRequestController.js\
 
 JS_FILES=\
 		src/js/intro.js\

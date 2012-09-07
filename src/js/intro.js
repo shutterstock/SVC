@@ -9,4 +9,6 @@
 	var svc = namespace.svc = {};
 	svc.VERSION = version;
 
+	//Function shortcuts
 	var fromArguments = Array.prototype.slice;
+	var emptyFunction = function () {};

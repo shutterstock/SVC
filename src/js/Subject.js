@@ -1,4 +1,4 @@
-// Subject 
+// Subject
 // --------------
 
 // The main work horse of our framework. This is a stripped down version of the Subject; it provides a very
@@ -10,7 +10,7 @@ svc.Subject = Class.create({
 		this._notificationToObservers = {};
 	},
 
-	// Equality test is just a strict equals against another `subject` at this point. 
+	// Equality test is just a strict equals against another `subject` at this point.
 	isEqual: function (subject) {
 		return this === subject;
 	},
@@ -21,14 +21,24 @@ svc.Subject = Class.create({
 		this._notificationToObservers = {};
 	},
 
+	// Retrieve all the registered notifications
+	notifications: function () {
+		return _.keys(this._notificationToObservers);
+	},
+
+	// Retrieve all the registered observers
+	observers: function () {
+		return _.chain(this._notificationToObservers).values().flatten().uniq().value();
+	},
+
 	// Notify that a particular `notification` happened. The first variable passed along will be the subject.
 	notify: function (notification) {
 		var observers = this._notificationToObservers[notification];
-		var args = Array.prototype.slice.call(arguments);
-		
+		var args = fromArguments.call(arguments);
+
 		// Remove the notification from the arguments array.
 		args.shift();
-		
+
 		// Add the subject as the first argument.
 		args.unshift(this);
 
@@ -53,7 +63,7 @@ svc.Subject = Class.create({
 		var observers = this._notificationToObservers[notification];
 
 		if (observers) {
-			this._notificationToObservers.set[notification] = _.without(observers, f);
+			this._notificationToObservers[notification] = _.without(observers, f);
 		}
 	}
 });

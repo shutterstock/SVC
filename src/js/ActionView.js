@@ -45,7 +45,7 @@ svc.ActionView = Class.create(svc.View, {
 		_.chain(events).uniq().compact().each(
 			_.bind(function (event) {
 				this.getField().observe(event, this._boundFireFunction);
-			}, this);
+			}, this)
 		);
 	},
 
