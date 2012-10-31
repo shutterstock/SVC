@@ -16,16 +16,19 @@ svc.AjaxController = Class.create(svc.Controller, {
 	// Make a request to the `path` on the server, passing whatever `args` are included as parameters.
 	// We're adding a `callback` here to be called `onComplete`, but we should really rethink this.
 	makeRequest: function (args, callback) {
-		var boundOnSuccess = this.onSuccess.bind(this);
-		var wrappedSuccess = callback && typeof(callback) === 'function' ? boundOnSuccess.wrap(callback).bind(this) : boundOnSuccess;
-		var req = new Ajax.Request(this.path(), {
-			method:     this.method(),
-			parameters: this.parameters().update(args),
-			onCreate:   this.onCreate.bind(this),
-			onSuccess:  wrappedSuccess,
-			onFailure:  this.onFailure.bind(this),
-			onComplete: this.onComplete.bind(this)
-		});
+		var boundOnSuccess = _.bind(this.onSuccess, this);
+		var wrappedSuccess = callback && typeof(callback) === 'function' ? _.bind(_.wrap(boundOnSuccess, callback), this) : boundOnSuccess;
+		$.ajax(
+			{
+				data: _.extend(this.parameters(), args),
+				dataType: 'json',
+				type: this.method(),
+				url: this.path(),
+				success: wrappedSuccess,
+				complete: _.bind(this.onComplete, this),					
+				error: _.bind(this.onFailure, this)
+			}
+		);
 	},
 
 	// Defines the `method` of the request (usually `POST` or `GET`).
@@ -35,19 +38,19 @@ svc.AjaxController = Class.create(svc.Controller, {
 	},
 
 	// The method called when the AJAX request is completed.
-	onComplete: Prototype.emptyFunction,
+	onComplete: function () {},
 	
 	// The method called when the AJAX request is created.
-	onCreate:   Prototype.emptyFunction,
+	onCreate:   function () {},
 	
 	// The method called when the AJAX request fails.
-	onFailure:  Prototype.emptyFunction,
+	onFailure:  function () {},
 	
 	// The method called when the AJAX request succeeds.
-	onSuccess:  Prototype.emptyFunction,
+	onSuccess:  function () {},
 	
 	// An object representing the parameters, this should be extended or overwritten.
-	parameters: function () { return $H(); },
+	parameters: function () { return {}; },
 
 	// Retrieves the `actionPath` of the request.
 	path: function () {

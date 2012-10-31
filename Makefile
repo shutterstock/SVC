@@ -42,7 +42,8 @@ prototype:
 
 svc.js:
 	cat $(JS_FILES) > $(VERSIONED_FILE)
-	sed -i -e "s/@VERSION/$(VERSION)/" -e "s/@NAMESPACE/$(NAMESPACE)/" $(VERSIONED_FILE)
+	sed -i -e "s/@VERSION/$(VERSION)/" $(VERSIONED_FILE)
+	sed -i -e "s/@NAMESPACE/$(NAMESPACE)/" $(VERSIONED_FILE)
 	cp $(VERSIONED_FILE) svc.js
 
 svc.min.js: $(JS_MIN) svc.js
