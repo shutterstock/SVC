@@ -65,6 +65,12 @@ svc.View = Class.create({
 		this.getSubject() && this.getSubject().unsubscribe(notification, fn);
 	},
 
+	// get all the subscribed functions
+	notifications: function () {
+		return _.keys(this._subscribedFunctions);	
+
+	},
+
 	// Clear out all subscribed functions for the view.
 	unsubscribeAll: function () {
 		_.chain(_.keys(this._subscribedFunctions)).each(_.bind(this.unsubscribe, this));

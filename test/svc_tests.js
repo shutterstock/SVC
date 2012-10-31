@@ -247,19 +247,21 @@ test('svc.View', function () {
 	// test getters
 	ok(testView.getElement().hasClass('test'), "view's element has the class name 'test'.");
 	ok(testView.getSubject().isEqual(subject), "view's Subject is subject.");
+
+	$('body').append(testView.getElement());
 	ok(testView.getElement().is(':visible'), "view's element is visible.");
 
 	// by default, views subscribe to subject:destroy
-	equal(testView._subscribedFunctions.keys().length, 1, "1 notification subscribed.");
-	deepEqual(testView._subscribedFunctions.keys(), ['subject:destroy'], "Subscribed notifications is 'subject:destroy'.");
+	equal(testView.notifications().length, 1, "1 notification subscribed.");
+	deepEqual(testView.notifications(), ['subject:destroy'], "Subscribed notifications is 'subject:destroy'.");
 
 	// subscribe a couple functions
 	testView.subscribe('test', testView.notified.bind(testView));
 	testView.subscribe('foo', testView.fakeSubscription.bind(testView));
 
 	// test that we have all the notifications
-	equal(testView._subscribedFunctions.keys().length, 3, "3 notifications subscribed.");
-	deepEqual(testView._subscribedFunctions.keys(), ['subject:destroy', 'test', 'foo'], "Subscribed notifications are 'subject:destroy', 'test', and 'foo'");
+	equal(testView.notifications().length, 3, "3 notifications subscribed.");
+	deepEqual(testView.notifications(), ['subject:destroy', 'test', 'foo'], "Subscribed notifications are 'subject:destroy', 'test', and 'foo'");
 
 	// test notifications
 	ok(!testView.getNotified(), "notification hasn't taken place yet.");
@@ -270,28 +272,28 @@ test('svc.View', function () {
 
 	// test unsubscribe
 	testView.unsubscribe('foo');
-	equal(testView._subscribedFunctions.keys().length, 2, "2 notification subscribed.");
-	deepEqual(testView._subscribedFunctions.keys(), ['subject:destroy', 'test'], "Subscribed notifications are 'subject:destroy' and 'test'.");
+	equal(testView.notifications().length, 2, "2 notification subscribed.");
+	deepEqual(testView.notifications(), ['subject:destroy', 'test'], "Subscribed notifications are 'subject:destroy' and 'test'.");
 
 	testView.unsubscribeAll();
-	equal(testView._subscribedFunctions.keys().length, 0, "No notifications subscribed.");
+	equal(testView.notifications().length, 0, "No notifications subscribed.");
 
 	// test tear down
 	testView.tearDown();
-	ok(!testView.getElement().visible(), "view's element is not visible.");
+	ok(!testView.getElement().is(':visible'), "view's element is not visible.");
 
 	// test tear down by notification
 	var testViewDestroyViaNotification = new TestView({subject:subject, varName:'testViewDestroyViaNotification'});
 
 	// by default, views subscribe to subject:destroy
-	equal(testViewDestroyViaNotification._subscribedFunctions.keys().length, 1, "1 notification subscribed.");
-	deepEqual(testViewDestroyViaNotification._subscribedFunctions.keys(), ['subject:destroy'], "Subscribed notifications is 'subject:destroy'.");
+	equal(testViewDestroyViaNotification.notifications().length, 1, "1 notification subscribed.");
+	deepEqual(testViewDestroyViaNotification.notifications(), ['subject:destroy'], "Subscribed notifications is 'subject:destroy'.");
 
 	// remotely teardown
 	subject.notify('subject:destroy');
 
 	// check that that works out
-	equal(testViewDestroyViaNotification._subscribedFunctions.keys().length, 0, "No notifications subscribed.");
+	equal(testViewDestroyViaNotification.notifications().length, 0, "No notifications subscribed.");
 
 	// set up two views to make sure multiple views can subscribe to the same subject
 	var testView1 = new TestView({subject:subject, varName:'testView1'});
@@ -300,10 +302,10 @@ test('svc.View', function () {
 	testView1.subscribe('test', testView1.notified.bind(testView1));
 	testView2.subscribe('test', testView2.notified.bind(testView2));
 
-	equal(testView1._subscribedFunctions.keys().length, 2, "2 notifications subscribed.");
-	deepEqual(testView1._subscribedFunctions.keys(), ['subject:destroy', 'test'], "Subscribed notifications are 'subject:destroy' and 'test'.");
-	equal(testView2._subscribedFunctions.keys().length, 2, "2 notifications subscribed.");
-	deepEqual(testView2._subscribedFunctions.keys(), ['subject:destroy', 'test'], "Subscribed notifications are 'subject:destroy' and 'test'.");
+	equal(testView1.notifications().length, 2, "2 notifications subscribed.");
+	deepEqual(testView1.notifications(), ['subject:destroy', 'test'], "Subscribed notifications are 'subject:destroy' and 'test'.");
+	equal(testView2.notifications().length, 2, "2 notifications subscribed.");
+	deepEqual(testView2.notifications(), ['subject:destroy', 'test'], "Subscribed notifications are 'subject:destroy' and 'test'.");
 
 	// test notifications
 	ok(!testView1.getNotified(), "notification hasn't taken place yet for testView1.");
