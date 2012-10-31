@@ -375,4 +375,4 @@ svc.Controller = Class.create({
 	}
 });
 
-})(null || (function(){ return this; })(), "1.1");
+})(null || (function(){ return this; })(), "2.0");

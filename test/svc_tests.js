@@ -215,8 +215,7 @@ test('svc.View', function () {
 		},
 
 		draw: function () {
-			return;
-			//return new Element('DIV').addClassName('test');
+			return $('<div class="test"></div>');
 		},
 
 		getNotified: function () {
@@ -235,7 +234,7 @@ test('svc.View', function () {
 	// we need a block to test exception throwing
 	var createView = function () {
 		return new svc.View({subject:subject});
-	}
+	};
 
 	var subject = new svc.Subject({});
 
@@ -246,9 +245,9 @@ test('svc.View', function () {
 	var testView = new TestView({subject: subject, varName: 'testView'});
 
 	// test getters
-	ok(testView.getElement().hasClassName('test'), "view's element has the class name 'test'.");
+	ok(testView.getElement().hasClass('test'), "view's element has the class name 'test'.");
 	ok(testView.getSubject().isEqual(subject), "view's Subject is subject.");
-	ok(testView.getElement().visible(), "view's element is visible.");
+	ok(testView.getElement().is(':visible'), "view's element is visible.");
 
 	// by default, views subscribe to subject:destroy
 	equal(testView._subscribedFunctions.keys().length, 1, "1 notification subscribed.");
